@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin version="php">
+<id>xnxf_geetest</id>
+<name>极验验证</name>
+<url>http://app.zblogcn.com/?auth=80</url>
+<note>评论时使用极验验证代替验证码</note>
+<description>置百丈玄冰而崩裂，掷须臾池水而漂摇。</description>
+<path>main.php</path>
+<include>include.php</include>
+<level>1</level>
+<author>
+  <name>沉冰浮水</name>
+  <email>wdssmq@qq.com</email>
+  <url>http://www.wdssmq.com/</url>
+</author>
+<source>
+  <name></name>
+  <email></email>
+  <url></url>
+</source>
+<adapted>150101</adapted>
+<version>1.0</version>
+<pubdate>2016-05-20</pubdate>
+<modified>2016-05-20</modified>
+<price>3</price>
+<advanced>
+  <dependency></dependency>
+  <rewritefunctions></rewritefunctions>
+  <conflict></conflict>
+</advanced>
+<sidebars>
+  <sidebar1></sidebar1>
+  <sidebar2></sidebar2>
+  <sidebar3></sidebar3>
+  <sidebar4></sidebar4>
+  <sidebar5></sidebar5>
+</sidebars>
+</plugin>
