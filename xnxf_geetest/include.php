@@ -3,27 +3,33 @@
 RegisterPlugin("xnxf_geetest","ActivePlugin_xnxf_geetest");
 
 function ActivePlugin_xnxf_geetest() {
-  //Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','geetest_putcode');
-  Add_Filter_Plugin('Filter_Plugin_Zbp_MakeTemplatetags','geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','geetest_putcode');
+  //Add_Filter_Plugin('Filter_Plugin_Zbp_MakeTemplatetags','geetest_putcode');
   Add_Filter_Plugin('Filter_Plugin_Cmd_Begin','geetest_verify');
 }
 
-function geetest_putcode(&$templatetags){
+function geetest_putcode(&$template){
   global $zbp;
+  if ($zbp->user->ID>0&&$zbp->user->ID<5){
+    $template->SetTags('geetest', '');
+    return;
+  }
   require_once 'function.php';
   $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
-  //session_start();
+  session_start();
   $status = $GtSdk->pre_process();
   $_SESSION['gtserver'] = $status;
   $zbp->header .= '<script type="text/javascript">var geetest_challenge = "' . $GtSdk->challenge . '";var geetest_captchaid = "' . $zbp->Config('xnxf_geetest')->captchaid . '"</script><script src="'. $zbp->host . 'zb_users/plugin/xnxf_geetest/plugin.js" type="text/javascript"></script><script async="true" src="http://api.geetest.com/get.php?callback=gtfunc"></script>';
-  $templatetags['geetest']='<div id="xnxf_geetest"></div>';
+  $template->SetTags('geetest', '<div id="xnxf_geetest" style="margin: 8px 0;"></div>');
 }
 
 function geetest_verify(){
   global $zbp;
-  require_once 'function.php';
   if (GetVars('act','GET')!="cmt"){return;}
+  if ($zbp->user->ID>0&&$zbp->user->ID<5){return;}
+  require_once 'function.php';
   $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
+  session_start();
   if ($_SESSION['gtserver'] == 1) {
     $result = $GtSdk->success_validate($_COOKIE['geetestchallenge'],$_COOKIE['geetestvalidate'],$_COOKIE['geetestseccode']);
   }else{

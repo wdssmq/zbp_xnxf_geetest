@@ -24,7 +24,7 @@ if(count($_POST)>0){
   <div class="SubMenu">
   </div>
   <div id="divMain2">
-    <p><b>在模板文件b_article_commentpost.html中加入<#xnxf/geetest#>以显示验证模块</b></p>
+    <p><b>1、在模板文件commentpost.php中加入{$geetest}以显示验证模块（&lt;p&gt;&lt;label for=&quot;txaArticle&quot;&gt;正文(*)&lt;/label&gt;&lt;/p&gt;前边)；</b></p>
     <form action="main.php?act=save" method="post">
       <table border="1" width="100%" class="tableBorder">
         <tr>

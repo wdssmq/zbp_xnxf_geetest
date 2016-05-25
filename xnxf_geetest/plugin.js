@@ -16,4 +16,5 @@
     SetCookie("geetestseccode", validate.geetest_seccode, 1);
     SetCookie("geeteston",0,1);
   })
+  //function(){gtObj.refresh();}
 }

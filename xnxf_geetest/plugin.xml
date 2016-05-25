@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin version="php">
 <id>xnxf_geetest</id>
-<name>极验验证</name>
+<name>极验验证【PHP】</name>
 <url>http://app.zblogcn.com/?auth=80</url>
 <note>评论时使用极验验证代替验证码</note>
 <description>置百丈玄冰而崩裂，掷须臾池水而漂摇。</description>
@@ -21,8 +21,8 @@
 <adapted>150101</adapted>
 <version>1.0</version>
 <pubdate>2016-05-20</pubdate>
-<modified>2016-05-20</modified>
-<price>3</price>
+<modified>2016-05-25</modified>
+<price>10.24</price>
 <advanced>
   <dependency></dependency>
   <rewritefunctions></rewritefunctions>
