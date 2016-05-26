@@ -3,9 +3,14 @@
 RegisterPlugin("xnxf_geetest","ActivePlugin_xnxf_geetest");
 
 function ActivePlugin_xnxf_geetest() {
-  Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','geetest_putcode');
-  //Add_Filter_Plugin('Filter_Plugin_Zbp_MakeTemplatetags','geetest_putcode');
-  Add_Filter_Plugin('Filter_Plugin_Cmd_Begin','geetest_verify');
+  Add_Filter_Plugin('Filter_Plugin_Zbp_LoadTemplate','geetest_begin');
+}
+
+function geetest_begin($templates){
+  if (strpos($templates['commentpost'],"geetest")!==false){
+    Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','geetest_putcode');
+    Add_Filter_Plugin('Filter_Plugin_Cmd_Begin','geetest_verify');
+  }
 }
 
 function geetest_putcode(&$template){

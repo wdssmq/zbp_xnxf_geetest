@@ -11,8 +11,8 @@ require $blogpath . 'zb_system/admin/admin_header.php';
 require $blogpath . 'zb_system/admin/admin_top.php';
 
 if(count($_POST)>0){
-	$zbp->Config('xnxf_geetest')->captchaid=$_POST['id'];
-	$zbp->Config('xnxf_geetest')->privatekey=$_POST['key'];
+	$zbp->Config('xnxf_geetest')->captchaid=trim($_POST['id']);
+	$zbp->Config('xnxf_geetest')->privatekey=trim($_POST['key']);
 	$zbp->SaveConfig('xnxf_geetest');
   // $zbp -> BuildTemplate();
 	$zbp->SetHint('good');
