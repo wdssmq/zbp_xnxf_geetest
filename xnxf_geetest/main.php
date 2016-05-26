@@ -24,7 +24,6 @@ if(count($_POST)>0){
   <div class="SubMenu">
   </div>
   <div id="divMain2">
-    <p><b>1、在模板文件commentpost.php中加入{$geetest}以显示验证模块（&lt;p&gt;&lt;label for=&quot;txaArticle&quot;&gt;正文(*)&lt;/label&gt;&lt;/p&gt;前边)；</b></p>
     <form action="main.php?act=save" method="post">
       <table border="1" width="100%" class="tableBorder">
         <tr>
@@ -44,6 +43,10 @@ if(count($_POST)>0){
         </tr>
       </table>
     </form>
+    <p><b>1、在模板文件commentpost.php中加入{$geetest}以显示验证模块（&lt;p&gt;&lt;label for=&quot;txaArticle&quot;&gt;&#27491;&#25991;(*)&lt;/label&gt;&lt;/p&gt;前边)；</b></p>
+    <p><b>2、注册 <a rel="nofollow" style="text-decoration: underline; color: rgb(0, 112, 192);" href="http://geetest.com/" title="极验验证" target="_blank">http://geetest.com/</a> 获取验证ID和Key写入插件配置项；</b></p>
+    <p><b>3、登陆用户仅权限等级为5（评论者）、6（游客）需要验证，，其他级别不显示验证组件；</b></p>
+
   </div>
 </div>
 

@@ -10,7 +10,7 @@ function ActivePlugin_xnxf_geetest() {
 
 function geetest_putcode(&$template){
   global $zbp;
-  if ($zbp->user->ID>0&&$zbp->user->ID<5){
+  if ($zbp->user->Level>0&&$zbp->user->Level<5){
     $template->SetTags('geetest', '');
     return;
   }
