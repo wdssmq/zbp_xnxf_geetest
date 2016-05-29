@@ -3,17 +3,17 @@
 RegisterPlugin("xnxf_geetest","ActivePlugin_xnxf_geetest");
 
 function ActivePlugin_xnxf_geetest() {
-  Add_Filter_Plugin('Filter_Plugin_Zbp_LoadTemplate','geetest_begin');
+  Add_Filter_Plugin('Filter_Plugin_Zbp_LoadTemplate','xnxf_geetest_begin');
 }
 
-function geetest_begin($templates){
+function xnxf_geetest_begin($templates){
   if (strpos($templates['commentpost'],"geetest")!==false){
-    Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','geetest_putcode');
-    Add_Filter_Plugin('Filter_Plugin_Cmd_Begin','geetest_verify');
+    Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','xnxf_geetest_putcode');
+    Add_Filter_Plugin('Filter_Plugin_Cmd_Begin','xnxf_geetest_verify');
   }
 }
 
-function geetest_putcode(&$template){
+function xnxf_geetest_putcode(&$template){
   global $zbp;
   if ($zbp->user->Level>0&&$zbp->user->Level<5){
     $template->SetTags('geetest', '');
@@ -23,7 +23,7 @@ function geetest_putcode(&$template){
   $template->SetTags('geetest', '<div id="xnxf_geetest" style="margin: 8px 0;"></div>');
 }
 
-function geetest_verify(){
+function xnxf_geetest_verify(){
   global $zbp;
   if (GetVars('act','GET')!=="cmt"){return;}
   if ($zbp->user->ID>0&&$zbp->user->ID<5){return;}
@@ -53,6 +53,7 @@ function InstallPlugin_xnxf_geetest() {
   if(!$zbp->HasConfig('xnxf_geetest')){
     $zbp->Config('xnxf_geetest')->captchaid='b46d1900d0a894591916ea94ea91bd2c';
     $zbp->Config('xnxf_geetest')->privatekey='36fc3fe98530eea08dfc6ce76e3d24c4';
+    //$zbp->Config('xnxf_geetest')->gtver='36fc3fe98530eea08dfc6ce76e3d24c4';
     $zbp->SaveConfig('xnxf_geetest');
 	}
 }

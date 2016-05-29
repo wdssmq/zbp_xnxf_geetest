@@ -12,11 +12,14 @@ class GeetestLib {
     public static $socketTimeout  = 1;
 
     private $response;
+    private $captcha_id;
+    private $private_key;
+    // private $http_code;
 
     public function __construct($captcha_id, $private_key) {
         $this->captcha_id  = $captcha_id;
         $this->private_key = $private_key;
-        $this->challenge = $private_key;
+        //$this->challenge = $private_key;
     }
 
     /**
@@ -47,11 +50,19 @@ class GeetestLib {
      * @param $challenge
      */
     private function success_process($challenge) {
-        $challenge      = md5($challenge . $this->private_key);
+
+        // Notice
+        // $this->send_request("http://api.geetest.com/get.php?gt=" . $this->captcha_id . "&challenge=");
+        // if ($this->http_code > 400) {
+          $challenge    = md5($challenge . $this->private_key);
+        // };
+        // Notice
+
         $result         = array(
             'success'   => 1,
             'gt'        => $this->captcha_id,
-            'challenge' => $challenge
+            'challenge' => $challenge,
+            'httpcode' => $this->http_code . "http://api.geetest.com/get.php?gt=" . $this->captcha_id . "&challenge="
         );
         $this->response = $result;
         $this->challenge = $challenge;
@@ -187,6 +198,10 @@ class GeetestLib {
                 $err = sprintf("curl[%s] error[%s]", $url, curl_errno($ch) . ':' . curl_error($ch));
                 $this->triggerError($err);
             }
+
+            //Notice
+            // $this->http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            //Notice
 
             curl_close($ch);
         } else {
