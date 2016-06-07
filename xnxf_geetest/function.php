@@ -62,10 +62,9 @@ class GeetestLib {
             'success'   => 1,
             'gt'        => $this->captcha_id,
             'challenge' => $challenge,
-            'httpcode' => $this->http_code . "http://api.geetest.com/get.php?gt=" . $this->captcha_id . "&challenge="
         );
         $this->response = $result;
-        $this->challenge = $challenge;
+        // $this->challenge = $challenge;
     }
 
     /**
@@ -81,7 +80,7 @@ class GeetestLib {
             'challenge' => $challenge
         );
         $this->response = $result;
-        $this->challenge = $challenge;
+        // $this->challenge = $challenge;
     }
 
     /**
