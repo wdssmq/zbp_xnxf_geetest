@@ -43,7 +43,7 @@ if(count($_POST)>0){
         </tr>
       </table>
     </form>
-    <p>1、在模板文件commentpost.php中加入<b>{$geetest}</b>以显示验证模块--例：{if $user.ID>0}…{else}…{if $option['ZC_COMMENT_VERIFY_ENABLE']}…{/if}{/if}<b>{$geetest}</b>--</p>
+    <p>1、在模板文件commentpost.php中加入<b>{$geetest}</b>以显示验证模块--大约位置：{if $user.ID>0}…{else}…{if $option['ZC_COMMENT_VERIFY_ENABLE']}…{/if}{/if}<b>{$geetest}</b>--</p>
     <p>2、注册 <a rel="nofollow" style="text-decoration: underline; color: rgb(0, 112, 192);" href="http://geetest.com/" title="极验验证" target="_blank">http://geetest.com/</a> 获取验证ID和Key写入插件配置项；</p>
     <p>3、登陆用户权限等级为5（评论者）、6（游客）时仍需要验证，，其他级别不显示验证组件；</p>
 

@@ -53,7 +53,6 @@ function InstallPlugin_xnxf_geetest() {
   if(!$zbp->HasConfig('xnxf_geetest')){
     $zbp->Config('xnxf_geetest')->captchaid='b46d1900d0a894591916ea94ea91bd2c';
     $zbp->Config('xnxf_geetest')->privatekey='36fc3fe98530eea08dfc6ce76e3d24c4';
-    //$zbp->Config('xnxf_geetest')->gtver='36fc3fe98530eea08dfc6ce76e3d24c4';
     $zbp->SaveConfig('xnxf_geetest');
 	}
 }
