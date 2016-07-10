@@ -13,6 +13,7 @@ require $blogpath . 'zb_system/admin/admin_top.php';
 if(count($_POST)>0){
 	$zbp->Config('xnxf_geetest')->captchaid=trim($_POST['id']);
 	$zbp->Config('xnxf_geetest')->privatekey=trim($_POST['key']);
+	$zbp->Config('xnxf_geetest')->https=(bool)trim($_POST['https']);
 	$zbp->SaveConfig('xnxf_geetest');
   // $zbp -> BuildTemplate();
 	$zbp->SetHint('good');
@@ -37,6 +38,10 @@ if(count($_POST)>0){
         <tr>
           <td><label for="key">key</label></td>
           <td><textarea style="width: 80%;" name="key" id="key"><?php echo $zbp->Config('xnxf_geetest')->privatekey ?></textarea></td>
+        </tr>
+        <tr>
+          <td>https连接</td>
+          <td><input type="text"  name="https" value="<?php echo $zbp->Config('xnxf_geetest')->https ?>" class="checkbox"/></td>
         </tr>
         <tr>
           <td><input type="submit" value="提交" /></td><td> </td>
