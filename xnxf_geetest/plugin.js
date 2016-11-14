@@ -1,11 +1,11 @@
 ﻿var gtfunc = function () {
-  SetCookie("geeteston",1,1);
-  SetCookie("geetestchallenge", "", 1);
-  SetCookie("geetestvalidate", "", 1);
-  SetCookie("geetestseccode", "", 1);
+  zbp.cookie.set("geeteston",1,1);
+  zbp.cookie.set("geetestchallenge", "", 1);
+  zbp.cookie.set("geetestvalidate", "", 1);
+  zbp.cookie.set("geetestseccode", "", 1);
   $.ajax({
     // 获取id，challenge，success（是否启用failback）
-    url: "/zb_system/cmd.php?act=cmt&getgeetest=" + (new Date()).getTime(), // 加随机数防止缓存
+    url: zbp.options.bloghost+"zb_users/plugin/xnxf_geetest/initialize.php?act=geetest&rnd=" + (new Date()).getTime(), // 加随机数防止缓存
     type: "get",
     dataType: "json",
     success: function (data) {
@@ -18,10 +18,10 @@
       gtObj.appendTo('#xnxf_geetest');
       gtObj.onSuccess(function () {
         var validate = gtObj.getValidate();
-        SetCookie("geetestchallenge", validate.geetest_challenge, 1);
-        SetCookie("geetestvalidate", validate.geetest_validate, 1);
-        SetCookie("geetestseccode", validate.geetest_seccode, 1);
-        SetCookie("geeteston",0,1);
+        zbp.cookie.set("geetestchallenge", validate.geetest_challenge, 1);
+        zbp.cookie.set("geetestvalidate", validate.geetest_validate, 1);
+        zbp.cookie.set("geetestseccode", validate.geetest_seccode, 1);
+        zbp.cookie.set("geeteston",0,1);
       })
     }
   });

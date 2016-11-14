@@ -3,13 +3,14 @@
 RegisterPlugin("xnxf_geetest","ActivePlugin_xnxf_geetest");
 
 function ActivePlugin_xnxf_geetest() {
-  Add_Filter_Plugin('Filter_Plugin_Zbp_LoadTemplate','xnxf_geetest_begin');
+  Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','xnxf_geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_Cmd_Begin','xnxf_geetest_verify');
+  Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate','xnxf_geetest_begin');
 }
 
-function xnxf_geetest_begin($templates){
+function xnxf_geetest_begin(&$templates){
   if (strpos($templates['commentpost'],"geetest")!==false){
-    Add_Filter_Plugin('Filter_Plugin_ViewPost_Template','xnxf_geetest_putcode');
-    Add_Filter_Plugin('Filter_Plugin_Cmd_Begin','xnxf_geetest_verify');
+
   }
 }
 
@@ -31,17 +32,12 @@ function xnxf_geetest_putcode(&$template){
 
 function xnxf_geetest_verify(){
   global $zbp;
+  $zbp->StartSession();
   if (GetVars('act','GET')!=="cmt"){return;}
   if ($zbp->user->ID>0&&$zbp->user->ID<5){return;}
   require_once 'function.php';
   $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
-  session_start();
-  if (GetVars('getgeetest','GET')!=""){
-    $status = $GtSdk->pre_process();
-    $_SESSION['gtserver'] = $status;
-    echo $GtSdk->get_response_str();
-    die();
-  }
+
   if ($_SESSION['gtserver'] == 1) {
     $result = $GtSdk->success_validate($_COOKIE['geetestchallenge'],$_COOKIE['geetestvalidate'],$_COOKIE['geetestseccode']);
   }else{
@@ -50,7 +46,7 @@ function xnxf_geetest_verify(){
   if ($result=="ok") {
     return;
   } else {
-    RespondError($result);
+    ScriptError($result);
   }
 }
 
@@ -62,6 +58,10 @@ function InstallPlugin_xnxf_geetest() {
     $zbp->Config('xnxf_geetest')->https=false;
     $zbp->SaveConfig('xnxf_geetest');
 	}
+  $zbp->SetHint('good','请确认已在模板中加入{$geetest}');
 }
 
-function UninstallPlugin_xnxf_geetest() {}
+function UninstallPlugin_xnxf_geetest() {
+  global $zbp;
+  $zbp->SetHint('bad','请移除模板中的{$geetest}标签');
+}
