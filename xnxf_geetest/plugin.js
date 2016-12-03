@@ -1,4 +1,4 @@
-﻿var gtfunc = function () {
+var gtfunc = function () {
   zbp.cookie.set("geeteston",1,1);
   zbp.cookie.set("geetestchallenge", "", 1);
   zbp.cookie.set("geetestvalidate", "", 1);
