@@ -19,13 +19,8 @@ function xnxf_geetest_putcode(&$template)
     $template->SetTags('geetest', '');
     return;
   }
-  if ($zbp->Config('xnxf_geetest')->https == false) {
-    $http = "http";
-  } else {
-    $http = "https";
-  }
-  $zbp->header .= '<script src="' . $zbp->host . 'zb_users/plugin/xnxf_geetest/plugin.js" type="text/javascript"></script><script async="true" src="' . $http . '://api.geetest.com/get.php?callback=gtfunc"></script>';
-  $template->SetTags('geetest', '<div id="xnxf_geetest" style="margin: 8px 0;"></div>');
+  $zbp->header .= '<script src="' . $zbp->host . 'zb_users/plugin/xnxf_geetest/plugin.js" type="text/javascript"></script><script async="true" src="//api.geetest.com/get.php?callback=gtfunc"></script>';
+  $template->SetTags('geetest', '<div id="xnxf-geetest" style="margin: 8px 0;"></div>');
 }
 function xnxf_geetest_verify()
 {
@@ -56,7 +51,6 @@ function InstallPlugin_xnxf_geetest()
   if (!$zbp->HasConfig('xnxf_geetest')) {
     $zbp->Config('xnxf_geetest')->captchaid  = 'b46d1900d0a894591916ea94ea91bd2c';
     $zbp->Config('xnxf_geetest')->privatekey = '36fc3fe98530eea08dfc6ce76e3d24c4';
-    $zbp->Config('xnxf_geetest')->https      = false;
     $zbp->SaveConfig('xnxf_geetest');
   }
   $zbp->SetHint('good', '请确认已在模板中加入{$geetest}');

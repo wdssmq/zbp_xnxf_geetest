@@ -15,7 +15,7 @@ var gtfunc = function () {
         product: "float",
         offline: !data.success
       });
-      gtObj.appendTo('#xnxf_geetest');
+      gtObj.appendTo('#xnxf-geetest');
       gtObj.onSuccess(function () {
         var validate = gtObj.getValidate();
         zbp.cookie.set("geetestchallenge", validate.geetest_challenge, 1);
