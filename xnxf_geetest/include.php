@@ -3,35 +3,48 @@
 RegisterPlugin("xnxf_geetest", "ActivePlugin_xnxf_geetest");
 function ActivePlugin_xnxf_geetest()
 {
-  Add_Filter_Plugin('Filter_Plugin_ViewPost_Template', 'xnxf_geetest_putcode');
-  Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'xnxf_geetest_verify');
-  Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'xnxf_geetest_begin');
+  Add_Filter_Plugin('Filter_Plugin_ViewPost_Template', 'geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_ViewList_Template', 'geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'geetest_verify');
+  Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'geetest_begin');
 }
-function xnxf_geetest_begin(&$templates)
+function geetest_begin(&$templates)
 {
-  if (strpos($templates['commentpost'], "geetest") !== false) {
+  if (strpos($templates['commentpost'], "geetest") === false) {
+    $templates['commentpost'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}'."\n".'{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}',$templates['commentpost']);
+    file_put_contents(dirname(__file__) . "jald.txt", $templates['commentpost']);
   }
 }
-function xnxf_geetest_putcode(&$template)
+function geetest_putcode(&$template)
 {
   global $zbp;
   if ($zbp->user->Level > 0 && $zbp->user->Level < 5) {
     $template->SetTags('geetest', '');
     return;
   }
-  $zbp->header .= '<script src="' . $zbp->host . 'zb_users/plugin/xnxf_geetest/plugin.js" type="text/javascript"></script><script async="true" src="//api.geetest.com/get.php?callback=gtfunc"></script>';
   $template->SetTags('geetest', '<div id="xnxf-geetest" style="margin: 8px 0;"></div>');
+  $zbp->footer .= '<script src="' . $zbp->host . 'zb_users/plugin/xnxf_geetest/plugin.js" type="text/javascript"></script><!--gtplug--><script async="true" src="//api.geetest.com/get.php?callback=gtfunc"></script>';
 }
-function xnxf_geetest_verify()
+function geetest_verify()
 {
   global $zbp;
-  $zbp->StartSession();
   if (GetVars('act', 'GET') !== "cmt") {
     return;
   }
   if ($zbp->user->ID > 0 && $zbp->user->ID < 5) {
     return;
   }
+  $result = geetest_verify_base();
+  if ($result == "ok") {
+    return;
+  } else {
+    ScriptError($result);
+  }
+}
+function geetest_verify_base()
+{
+  global $zbp;
+  $zbp->StartSession();
   require_once 'function.php';
   $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
   if ($_SESSION['gtserver'] == 1) {
@@ -39,11 +52,7 @@ function xnxf_geetest_verify()
   } else {
     $result = $GtSdk->fail_validate($_COOKIE['geetestchallenge'], $_COOKIE['geetestvalidate'], $_COOKIE['geetestseccode']);
   }
-  if ($result == "ok") {
-    return;
-  } else {
-    ScriptError($result);
-  }
+  return $result;
 }
 function InstallPlugin_xnxf_geetest()
 {

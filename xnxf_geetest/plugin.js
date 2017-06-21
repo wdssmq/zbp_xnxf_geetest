@@ -1,3 +1,9 @@
+var gtplug = {};
+gtplug.aff = function(){
+  $.get(zbp.options.bloghost+"zb_users/plugin/xnxf_aff/ajaxAdd.php",function(){
+    
+  });
+}
 var gtfunc = function () {
   zbp.cookie.set("geeteston",1,1);
   zbp.cookie.set("geetestchallenge", "", 1);
@@ -22,7 +28,11 @@ var gtfunc = function () {
         zbp.cookie.set("geetestvalidate", validate.geetest_validate, 1);
         zbp.cookie.set("geetestseccode", validate.geetest_seccode, 1);
         zbp.cookie.set("geeteston",0,1);
-      })
+        for (var key in gtplug)
+        {
+          gtplug[key]();
+        }
+      });
     }
   });
   //function(){gtObj.refresh();}

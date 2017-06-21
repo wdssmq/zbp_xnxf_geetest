@@ -6,7 +6,7 @@ $action='root';
 if (!$zbp->CheckRights($action)) {$zbp->ShowError(6);die();}
 if (!$zbp->CheckPlugin('xnxf_geetest')) {$zbp->ShowError(48);die();}
 
-$blogtitle='xnxf_geetest';
+$blogtitle='GeeTest';
 require $blogpath . 'zb_system/admin/admin_header.php';
 require $blogpath . 'zb_system/admin/admin_top.php';
 
@@ -43,10 +43,16 @@ if(count($_POST)>0){
         </tr>
       </table>
     </form>
-    <p>1、在模板文件template/commentpost.php中加入<b>{$geetest}</b>以显示验证模块--大约位置：{if $user.ID>0}…{else}…{if $option['ZC_COMMENT_VERIFY_ENABLE']}…{/if}{/if}<b>{$geetest}</b>--</p>
+    <p>1、在模板文件template/commentpost.php中加入<b>{if $zbp->CheckPlugin('xnxf_geetest')}{$geetest}{/if}</b>以显示验证模块---一般在{if $option['ZC_COMMENT_VERIFY_ENABLE']}{/if}前边或后边--</p>
     <p>2、注册 <a rel="nofollow" style="text-decoration: underline; color: rgb(0, 112, 192);" href="http://geetest.com/" title="极验验证" target="_blank">http://geetest.com/</a> 获取验证ID和Key写入插件配置项；</p>
     <p>3、登陆用户权限等级为5（评论者）、6（游客）时仍需要验证，，其他级别不显示验证组件；</p>
-
+    <p>4、单独调用：<pre>
+$result = geetest_verify_base();
+if ($result == "ok") {
+  //验证成功;
+} else {
+  ScriptError($result);
+}</pre></p>
   </div>
 </div>
 
