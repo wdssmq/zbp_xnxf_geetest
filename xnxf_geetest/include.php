@@ -10,9 +10,8 @@ function ActivePlugin_xnxf_geetest()
 }
 function geetest_begin(&$templates)
 {
-  if (strpos($templates['commentpost'], "geetest") === false) {
+  if (strpos($templates['commentpost'], "geetest") === false && mb_substr_count($templates['commentpost'],"ZC_COMMENT_VERIFY_ENABLE") == 1) {
     $templates['commentpost'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}'."\n".'{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}',$templates['commentpost']);
-    file_put_contents(dirname(__file__) . "jald.txt", $templates['commentpost']);
   }
 }
 function geetest_putcode(&$template)
