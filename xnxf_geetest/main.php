@@ -14,7 +14,7 @@ if(count($_POST)>0){
 	$zbp->Config('xnxf_geetest')->captchaid=trim($_POST['id']);
 	$zbp->Config('xnxf_geetest')->privatekey=trim($_POST['key']);
 	$zbp->SaveConfig('xnxf_geetest');
-  // $zbp -> BuildTemplate();
+  $zbp -> BuildTemplate();
 	$zbp->SetHint('good');
 	Redirect('./main.php');
 }
@@ -43,16 +43,18 @@ if(count($_POST)>0){
         </tr>
       </table>
     </form>
-    <p>1、在模板文件template/commentpost.php中加入<b>{if $zbp->CheckPlugin('xnxf_geetest')}{$geetest}{/if}</b>以显示验证模块---一般在{if $option['ZC_COMMENT_VERIFY_ENABLE']}{/if}前边或后边--</p>
-    <p>2、注册 <a rel="nofollow" style="text-decoration: underline; color: rgb(0, 112, 192);" href="http://geetest.com/" title="极验验证" target="_blank">http://geetest.com/</a> 获取验证ID和Key写入插件配置项；</p>
-    <p>3、登陆用户权限等级为5（评论者）、6（游客）时仍需要验证，，其他级别不显示验证组件；</p>
-    <p>4、单独调用：<pre>
-$result = geetest_verify_base();
-if ($result == "ok") {
-  //验证成功;
-} else {
-  ScriptError($result);
-}</pre></p>
+      <p>*、注册 <a rel="nofollow" style="text-decoration: underline; color: rgb(0, 112, 192);" href="http://geetest.com/" title="极验验证" target="_blank">http://geetest.com/</a> 获取验证ID和Key写入插件配置项；</p>
+      <p>*、插件会尝试自动添加验证代码（不会修改主题原始文件）；</p>
+      <p>*、如果未出现验证或位置恰当请在模板文件template/commentpost.php中加入代码<b>{if $zbp->CheckPlugin('xnxf_geetest')}{$geetest}{/if}</b></p>
+      <p>*、一般在{if $option['ZC_COMMENT_VERIFY_ENABLE']}……{/if} <b>前边或后边</b></p>
+      <p>*、登陆用户权限等级为5（评论者）、6（游客）时仍需要验证，，其他级别不显示验证组件；</p>
+      <p>*、单独调用：<pre>
+  $result = geetest_verify_base();
+  if ($result == "ok") {
+    //验证成功;
+  } else {
+    ScriptError($result);
+  }</pre></p>
   </div>
 </div>
 
