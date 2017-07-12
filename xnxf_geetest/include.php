@@ -22,7 +22,17 @@ function geetest_putcode(&$template)
     return;
   }
   $template->SetTags('geetest', '<div id="xnxf-geetest" style="margin: 8px 0;"></div>');
-  $zbp->footer .= '<script src="' . $zbp->host . 'zb_users/plugin/xnxf_geetest/plugin.js" type="text/javascript"></script><!--gtplug--><script async="true" src="//api.geetest.com/get.php?callback=gtfunc"></script>';
+  $zbp->footer .= geetest_buiCode();
+}
+function geetest_buiCode(){
+  global $zbp;
+  $code = '<script type="text/javascript" src="'.geetest_Path("gt.js","host").'"></script><!--gtplug--><script type="text/javascript" src="'.geetest_Path("plu.js","host").'"></script>';
+  if (1==1){
+    return $code ;
+    // . '<script src="' . $zbp->host . 'zb_users/plugin/xnxf_geetest/plugin.js" type="text/javascript"></script><!--gtplug--><script async="true" src="//api.geetest.com/get.php?callback=gtfunc"></script>';
+  } else {
+    
+  }
 }
 function geetest_verify()
 {
@@ -53,6 +63,25 @@ function geetest_verify_base()
   }
   return $result;
 }
+function geetest_Path($file, $t = "path")
+{
+  global $zbp;
+  $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
+  switch ($file) {
+    case "gt.js":
+      return $result . "gt.js";
+      break;
+    case "plu.js":
+      return $result . "plugin.js";
+      break;
+    case "Main":
+      return $result . "main.php";
+      break;
+    default:
+      return $result;
+  }
+}
+ 
 function InstallPlugin_xnxf_geetest()
 {
   global $zbp;
