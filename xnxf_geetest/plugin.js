@@ -16,16 +16,22 @@ var gtplug = {};
         challenge: data.challenge,
         offline: !data.success,
         product: "float",
-        // new_captcha: data.new_captcha
-        new_captcha: false
+        new_captcha: data.new_captcha
       }, function (captchaObj) {
         captchaObj.appendTo('#xnxf-geetest');
+        if (captchaObj.reset) {
+          captchaObj.refresh = captchaObj.reset;
+          // gtplug.san = function(){
+            // $('#xnxf-geetest').hide();
+            // captchaObj.refresh();
+          // };
+        }
         zbp.plugin.on("comment.postsuccess", "geetest", function () {
-          captchaObj.reset();
+          captchaObj.refresh();
+          // $('#xnxf-geetest').show();
         });
-        captchaObj.onError(function () {
-          captchaObj.reset();
-        });
+        // captchaObj.onError();
+
         captchaObj.onSuccess(function () {
           var validate = captchaObj.getValidate();
           zbp.cookie.set("geetestchallenge", validate.geetest_challenge, 1);

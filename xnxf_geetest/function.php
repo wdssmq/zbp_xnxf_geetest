@@ -4,7 +4,7 @@
  *
  * @author Tanxu
  */
-class GeetestLib3
+class GeetestLib
 {
   const GT_SDK_VERSION = 'php_3.0.0';
   public static $connectTimeout = 1;
@@ -96,10 +96,10 @@ class GeetestLib3
    * @param array $param
    * @return int
    */
-  public function success_validate($challenge, $validate, $seccode, $param, $json_format = 1)
+  public function success_validate($challenge, $validate, $seccode, $param = array(), $json_format = 1)
   {
     if (!$this->check_validate($challenge, $validate)) {
-      return 0;
+      return "请完成验证或刷新重试";
     }
     $query        = array(
       "seccode" => $seccode,
@@ -114,12 +114,12 @@ class GeetestLib3
     $codevalidate = $this->post_request($url, $query);
     $obj          = json_decode($codevalidate, true);
     if ($obj === false) {
-      return "验证超时，请刷新验证组件重新验证";
+      return "请完成验证或刷新重试";
     }
     if ($obj['seccode'] == md5($seccode)) {
       return "ok";
     } else {
-      return "验证错误，请刷新或稍后再试";
+      return "请完成验证或刷新重试";
     }
   }
   /**
@@ -135,7 +135,7 @@ class GeetestLib3
     if (md5($challenge) == $validate) {
       return "ok";
     } else {
-      return "请拖动滑块完成验证";
+      return "请完成验证或刷新重试";
     }
   }
   /**
