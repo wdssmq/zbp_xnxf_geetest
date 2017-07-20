@@ -10,8 +10,8 @@ function ActivePlugin_xnxf_geetest()
 }
 function geetest_begin(&$templates)
 {
-  if (strpos($templates['commentpost'], "geetest") === false && mb_substr_count($templates['commentpost'],"ZC_COMMENT_VERIFY_ENABLE") == 1) {
-    $templates['commentpost'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}'."\n".'{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}',$templates['commentpost']);
+  if (strpos($templates['commentpost'], "geetest") === false && mb_substr_count($templates['commentpost'], "ZC_COMMENT_VERIFY_ENABLE") == 1) {
+    $templates['commentpost'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['commentpost']);
   }
 }
 function geetest_putcode(&$template)
@@ -23,7 +23,7 @@ function geetest_putcode(&$template)
   }
   // $template->SetTags('geetest', '<div id="xnxf-geetest" style="margin: 8px 0;"></div>');
   $template->SetTags('geetest', '<div id="xnxf-geetest"></div>');
-  $zbp->footer .= '<script type="text/javascript" src="'.geetest_Path("gt.js","host").'"></script><!--gtplug--><script type="text/javascript" src="'.geetest_Path("plu.js","host").'"></script>';
+  $zbp->footer .= '<script type="text/javascript" src="' . geetest_Path("gt.js", "host") . '"></script><!--gtplug--><script type="text/javascript" src="' . geetest_Path("plu.js", "host") . '"></script>';
 }
 function geetest_verify()
 {
@@ -72,7 +72,6 @@ function geetest_Path($file, $t = "path")
       return $result;
   }
 }
-
 function InstallPlugin_xnxf_geetest()
 {
   global $zbp;

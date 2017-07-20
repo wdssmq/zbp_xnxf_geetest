@@ -4,6 +4,8 @@ var gtplug = {};
   zbp.cookie.set("geetestchallenge", "", 1);
   zbp.cookie.set("geetestvalidate", "", 1);
   zbp.cookie.set("geetestseccode", "", 1);
+  if ($('#xnxf-geetest').length == 0)
+    return;
   $.ajax({
     // 获取id，challenge，success（是否启用failback）
     url: zbp.options.bloghost + "zb_users/plugin/xnxf_geetest/initialize.php?act=geetest&rnd=" + (new Date()).getTime(), // 加随机数防止缓存
