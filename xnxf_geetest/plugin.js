@@ -1,4 +1,3 @@
-var gtplug = {};
 (function () {
   zbp.cookie.set("geeteston", 1, 1);
   zbp.cookie.set("geetestchallenge", "", 1);

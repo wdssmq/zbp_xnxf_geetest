@@ -58,12 +58,16 @@ function geetest_Path($file, $t = "path")
 {
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
+  if ($t == "host")
+    $hash = "?v=20170729210945";
+  else
+    $hash = "";
   switch ($file) {
     case "gt.js":
-      return $result . "gt.js";
+      return $result . "gt.js{$hash}";
       break;
     case "plu.js":
-      return $result . "plugin.js";
+      return $result . "plugin.js{$hash}";
       break;
     case "Main":
       return $result . "main.php";
