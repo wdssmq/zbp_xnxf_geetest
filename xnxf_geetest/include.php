@@ -5,6 +5,7 @@ function ActivePlugin_xnxf_geetest()
 {
   Add_Filter_Plugin('Filter_Plugin_ViewPost_Template', 'geetest_putcode');
   Add_Filter_Plugin('Filter_Plugin_ViewList_Template', 'geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_ViewComments_Template', 'geetest_putcode');
   Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'geetest_verify');
   Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'geetest_begin');
 }
