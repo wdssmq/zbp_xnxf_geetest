@@ -18,7 +18,7 @@ function geetest_begin(&$templates)
 function geetest_putcode(&$template)
 {
   global $zbp;
-  if ($zbp->user->Level > 0 && $zbp->user->Level < 5) {
+  if ($zbp->user->ID > 0 && $zbp->user->Level < 5) {
     $template->SetTags('geetest', '');
     return;
   }
@@ -32,14 +32,23 @@ function geetest_verify()
   if (GetVars('act', 'GET') !== "cmt") {
     return;
   }
-  if ($zbp->user->ID > 0 && $zbp->user->ID < 5) {
+  if ($zbp->user->ID > 0 && $zbp->user->Level < 5) {
     return;
+  }
+  if ($zbp->Config('xnxf_geetest')->email && GetVars('email', 'POST') == null) {
+    if (GetVars('format', 'POST') == 'json')
+      JsonError(78, "请输入邮箱",  $_POST);
+    else
+      ScriptError("请输入邮箱");
   }
   $result = geetest_verify_base();
   if ($result == "ok") {
     return;
   } else {
-    ScriptError($result);
+    if (GetVars('format', 'POST') == 'json')
+      JsonError(79, $result, $_POST);
+    else
+      ScriptError($result);
   }
 }
 function geetest_verify_base()
@@ -60,7 +69,7 @@ function geetest_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=20170729210945";
+    $hash = "?v=20180906213539";
   else
     $hash = "";
   switch ($file) {
@@ -81,7 +90,7 @@ function InstallPlugin_xnxf_geetest()
 {
   global $zbp;
   if (!$zbp->HasConfig('xnxf_geetest')) {
-    $zbp->Config('xnxf_geetest')->captchaid  = 'b46d1900d0a894591916ea94ea91bd2c';
+    $zbp->Config('xnxf_geetest')->captchaid = 'b46d1900d0a894591916ea94ea91bd2c';
     $zbp->Config('xnxf_geetest')->privatekey = '36fc3fe98530eea08dfc6ce76e3d24c4';
     $zbp->SaveConfig('xnxf_geetest');
   }
