@@ -28,7 +28,7 @@ function geetest_putcode(&$template)
   //die();
   // $template->SetTags('geetest', '<div id="xnxf-geetest" style="margin: 8px 0;"></div>');
   $template->SetTags('geetest', '<div id="xnxf-geetest"></div>');
-  $zbp->footer .= '<script type="text/javascript" src="' . geetest_Path("gt.js", "host") . '"></script><!--gtplug--><script type="text/javascript" src="' . geetest_Path("plu.js", "host") . '"></script>';
+  $zbp->footer .= '<script src="' . geetest_Path("gt.js", "host") . '"></script><!--gtplug--><script src="' . geetest_Path("plu.js", "host") . '"></script>';
 }
 function geetest_verify()
 {
