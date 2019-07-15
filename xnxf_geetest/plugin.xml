@@ -2,7 +2,7 @@
 <plugin version="php">
 <id>xnxf_geetest</id>
 <name>极验验证【PHP】</name>
-<url>http://app.zblogcn.com/?auth=80</url>
+<url>//jq.qq.com/?_wv=1027&amp;k=555hND5</url>
 <note>评论时使用极验验证代替验证码</note>
 <description>置百丈玄冰而崩裂，掷须臾池水而漂摇。</description>
 <path>main.php</path>
@@ -19,10 +19,10 @@
   <url></url>
 </source>
 <adapted>151626</adapted>
-<version>0.1</version>
+<version>1.0</version>
 <pubdate>2016-05-20</pubdate>
-<modified>2018-12-04</modified>
-<price>13.7</price>
+<modified>2019-06-16</modified>
+<price>0</price>
 <phpver>5.4</phpver>
 <advanced>
   <dependency></dependency>
