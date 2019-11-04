@@ -22,9 +22,9 @@ function geetest_putcode(&$template)
     $template->SetTags('geetest', '');
     return;
   }
-  echo __LINE__ . ":<br>\n";
-  var_dump(1);
-  echo "<br><br>\n\n";
+  // echo __LINE__ . ":<br>\n";
+  // var_dump(1);
+  // echo "<br><br>\n\n";
   //die();
   // $template->SetTags('geetest', '<div id="xnxf-geetest" style="margin: 8px 0;"></div>');
   $template->SetTags('geetest', '<div id="xnxf-geetest"></div>');
