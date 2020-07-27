@@ -3,34 +3,33 @@
 RegisterPlugin("xnxf_geetest", "ActivePlugin_xnxf_geetest");
 function ActivePlugin_xnxf_geetest()
 {
-  Add_Filter_Plugin('Filter_Plugin_ViewPost_Template', 'geetest_putcode');
-  Add_Filter_Plugin('Filter_Plugin_ViewList_Template', 'geetest_putcode');
-  Add_Filter_Plugin('Filter_Plugin_ViewComments_Template', 'geetest_putcode');
-  Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'geetest_verify');
-  Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'geetest_begin');
+  Add_Filter_Plugin('Filter_Plugin_ViewPost_Template', 'xnxf_geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_ViewList_Template', 'xnxf_geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_ViewComments_Template', 'xnxf_geetest_putcode');
+  Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'xnxf_geetest_verify');
+  Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'xnxf_geetest_begin');
 }
-function geetest_begin(&$templates)
+function xnxf_geetest_begin(&$templates)
 {
-  if (strpos($templates['commentpost'], "geetest") === false && mb_substr_count($templates['commentpost'], "ZC_COMMENT_VERIFY_ENABLE") == 1) {
-    $templates['commentpost'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['commentpost']);
+  if (!isset($templates['comment-post'])) {
+    $templates['comment-post'] = $templates['commentpost'];
   }
+  if (strpos($templates['comment-post'], "geetest") === false && mb_substr_count($templates['comment-post'], "ZC_COMMENT_VERIFY_ENABLE", "UTF-8") == 1) {
+    $templates['comment-post'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['comment-post']);
+  }
+  $templates['commentpost'] = $templates['comment-post'];;
 }
-function geetest_putcode(&$template)
+function xnxf_geetest_putcode(&$template)
 {
   global $zbp;
   if ($zbp->user->ID > 0 && $zbp->user->Level < 5) {
     $template->SetTags('geetest', '');
     return;
   }
-  // echo __LINE__ . ":<br>\n";
-  // var_dump(1);
-  // echo "<br><br>\n\n";
-  //die();
-  // $template->SetTags('geetest', '<div id="xnxf-geetest" style="margin: 8px 0;"></div>');
   $template->SetTags('geetest', '<div id="xnxf-geetest"></div>');
-  $zbp->footer .= '<script src="' . geetest_Path("gt.js", "host") . '"></script><!--gtplug--><script src="' . geetest_Path("plu.js", "host") . '"></script>';
+  $zbp->footer .= '<script src="' . xnxf_geetest_Path("gt.js", "host") . '"></script><!--gtplug--><script src="' . xnxf_geetest_Path("plu.js", "host") . '"></script>';
 }
-function geetest_verify()
+function xnxf_geetest_verify()
 {
   global $zbp;
   if (GetVars('act', 'GET') !== "cmt") {
@@ -45,7 +44,7 @@ function geetest_verify()
     else
       ScriptError("请输入邮箱");
   }
-  $result = geetest_verify_base();
+  $result = xnxf_geetest_verify_base();
   if ($result == "ok") {
     return;
   } else {
@@ -55,7 +54,7 @@ function geetest_verify()
       ScriptError($result);
   }
 }
-function geetest_verify_base()
+function xnxf_geetest_verify_base()
 {
   global $zbp;
   $zbp->StartSession();
@@ -68,12 +67,12 @@ function geetest_verify_base()
   }
   return $result;
 }
-function geetest_Path($file, $t = "path")
+function xnxf_geetest_Path($file, $t = "path")
 {
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=20180906213539";
+    $hash = "?v=2020-07-27";
   else
     $hash = "";
   switch ($file) {
