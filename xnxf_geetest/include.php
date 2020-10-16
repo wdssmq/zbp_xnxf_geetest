@@ -23,7 +23,7 @@ function xnxf_geetest_putcode(&$template)
 {
   global $zbp;
   if ($zbp->user->ID > 0 && $zbp->user->Level < 5) {
-    $template->SetTags('geetest', '');
+    $template->SetTags('geetest', '<!--geetest-->');
     return;
   }
   $template->SetTags('geetest', '<div id="xnxf-geetest"></div>');
