@@ -54,16 +54,25 @@ function xnxf_geetest_verify()
       ScriptError($result);
   }
 }
-function xnxf_geetest_verify_base()
+function xnxf_geetest_verify_base($code = "", $app = "capt")
 {
   global $zbp;
+  $cookieName = "{$app}_GeetPass";
+  if (!empty($code) && $code == GetVars($cookieName, "COOKIE")) {
+    return "ok";
+  }
   $zbp->StartSession();
-  require_once 'function.php';
+  require __DIR__ . '/function.php';
   $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
-  if ($_SESSION['gtserver'] == 1) {
-    $result = $GtSdk->success_validate($_COOKIE['geetestchallenge'], $_COOKIE['geetestvalidate'], $_COOKIE['geetestseccode']);
+  if (isset($_SESSION['gtserver']) && $_SESSION['gtserver'] == 1) {
+    $result = $GtSdk->success_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate', "COOKIE"), GetVars('geetestseccode', "COOKIE"));
   } else {
-    $result = $GtSdk->fail_validate($_COOKIE['geetestchallenge'], $_COOKIE['geetestvalidate'], $_COOKIE['geetestseccode']);
+    $result = $GtSdk->fail_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate',  "COOKIE"), GetVars('geetestseccode', "COOKIE"));
+  }
+  if ($result === "ok" && !empty($code)) {
+    setcookie($cookieName, $code, time() + 212400, $zbp->cookiespath);
+  } else {
+    setcookie($cookieName, $code, time() - 1, $zbp->cookiespath);
   }
   return $result;
 }
@@ -72,7 +81,7 @@ function xnxf_geetest_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=2020-07-27";
+    $hash = "?v=2020-10-16";
   else
     $hash = "";
   switch ($file) {
