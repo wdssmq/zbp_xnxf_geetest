@@ -17,7 +17,8 @@ function xnxf_geetest_begin(&$templates)
   if (strpos($templates['comment-post'], "geetest") === false && mb_substr_count($templates['comment-post'], "ZC_COMMENT_VERIFY_ENABLE", "UTF-8") == 1) {
     $templates['comment-post'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['comment-post']);
   }
-  $templates['commentpost'] = $templates['comment-post'];;
+  $templates['commentpost'] = $templates['comment-post'];
+  $templates['plugin_xnxf_geetest_capt'] = file_get_contents(xnxf_geetest_Path("tpl-capt"));
 }
 function xnxf_geetest_putcode(&$template)
 {
@@ -54,9 +55,12 @@ function xnxf_geetest_verify()
       ScriptError($result);
   }
 }
-function xnxf_geetest_verify_base($code = "", $app = "capt")
+function xnxf_geetest_verify_base($code = "", $app = "capt", $exp = 300)
 {
   global $zbp;
+  if ($zbp->user->ID > 0 && $zbp->user->Level < 5) {
+    return "ok";
+  }
   $cookieName = "{$app}_GeetPass";
   if (!empty($code) && $code == GetVars($cookieName, "COOKIE")) {
     return "ok";
@@ -70,7 +74,7 @@ function xnxf_geetest_verify_base($code = "", $app = "capt")
     $result = $GtSdk->fail_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate',  "COOKIE"), GetVars('geetestseccode', "COOKIE"));
   }
   if ($result === "ok" && !empty($code)) {
-    setcookie($cookieName, $code, time() + 212400, $zbp->cookiespath);
+    setcookie($cookieName, $code, time() + $exp, $zbp->cookiespath);
   } else {
     setcookie($cookieName, $code, time() - 1, $zbp->cookiespath);
   }
@@ -81,10 +85,13 @@ function xnxf_geetest_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=2020-10-16";
+    $hash = "?v=2020-12-14";
   else
     $hash = "";
   switch ($file) {
+    case "tpl-capt":
+      return $result . "tpl/capt.php";
+      break;
     case "gt.js":
       return $result . "gt.js{$hash}";
       break;
@@ -98,6 +105,24 @@ function xnxf_geetest_Path($file, $t = "path")
       return $result;
   }
 }
+function xnxf_geetest_ShowCapt($title = "", $note = "")
+{
+  global $zbp;
+  if (xnxf_geetest_verify_base() === "ok") {
+    return "pass";
+  }
+  $zbp->template->SetTemplate('plugin_xnxf_geetest_capt');
+  $zbp->template->SetTags('title', $title);
+  foreach ($GLOBALS['hooks']['Filter_Plugin_ViewList_Template'] as $fpname => &$fpsignal) {
+    $fpreturn = $fpname($zbp->template);
+    if ($fpsignal == PLUGIN_EXITSIGNAL_RETURN) {
+      $fpsignal = PLUGIN_EXITSIGNAL_NONE;
+      return $fpreturn;
+    }
+  }
+  $zbp->template->Display();
+  die();
+}
 function InstallPlugin_xnxf_geetest()
 {
   global $zbp;
@@ -107,6 +132,7 @@ function InstallPlugin_xnxf_geetest()
     $zbp->SaveConfig('xnxf_geetest');
   }
   $zbp->SetHint('good', '请确认已在模板中加入{$geetest}');
+  $zbp->BuildTemplate();
 }
 function UninstallPlugin_xnxf_geetest()
 {
