@@ -85,7 +85,7 @@ function xnxf_geetest_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=2020-12-14";
+    $hash = "?v=2021-03-02";
   else
     $hash = "";
   switch ($file) {

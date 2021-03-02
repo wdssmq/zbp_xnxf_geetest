@@ -31,6 +31,8 @@ if (count($_POST) > 0) {
 <div id="divMain">
   <div class="divHeader"><?php echo $blogtitle; ?></div>
   <div class="SubMenu">
+    <a href="main.php" title="首页"><span class="m-left m-now">首页</span></a>
+    <?php require "about.php"; ?>
   </div>
   <div id="divMain2">
     <form action="<?php echo BuildSafeURL("main.php?act=save"); ?>" method="post">
@@ -63,7 +65,7 @@ if (count($_POST) > 0) {
     <p>4、一般在{if $option['ZC_COMMENT_VERIFY_ENABLE']}……{/if} <b>前边或后边</b></p>
     <p>5、登陆用户权限等级为5（评论者）、6（游客）时仍需要验证，，其他级别不显示验证组件；</p>
     <p>6、单独调用：
-      <pre>if ($zbp->CheckPlugin('xnxf_geetest')) {
+    <pre>if ($zbp->CheckPlugin('xnxf_geetest')) {
   $result = xnxf_geetest_verify_base();
   if ($result == "ok") {
     //验证成功;
