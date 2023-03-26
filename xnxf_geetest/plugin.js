@@ -1,3 +1,5 @@
+/* global gtplug:false initGeetest:false */
+
 (function () {
   const gob_pass = zbp.cookie.get("capt_GeetPass");
   console.log(gob_pass);
@@ -56,14 +58,14 @@
               }
             })
             .onError(function () {
-              //your code
+              // your code
             });
           zbp.plugin.on("comment.postsuccess", "geetest", function () {
             captchaObj.refresh();
           });
-        }
+        },
       );
     },
   });
-  //function(){captchaObj.refresh();}
+  // function(){captchaObj.refresh();}
 })();
