@@ -29,6 +29,8 @@ function xnxf_geetest_putcode(&$template)
   }
   $template->SetTags('geetest', '<div id="xnxf-geetest"></div>');
   $zbp->footer .= '<script src="' . xnxf_geetest_Path("gt.js", "host") . '"></script><!--gtplug--><script src="' . xnxf_geetest_Path("plu.js", "host") . '"></script>';
+  $style = xnxf_geetest_Path("bin-css", "host");
+  $zbp->header .= "<link rel=\"stylesheet\" href=\"{$style}\">";
 }
 function xnxf_geetest_verify()
 {
@@ -80,12 +82,26 @@ function xnxf_geetest_verify_base($code = "", $app = "capt", $exp = 300)
   }
   return $result;
 }
+
+function xnxf_geetest_BuildCSS()
+{
+  global $zbp;
+  $dir = xnxf_geetest_Path("bin");
+  if (!is_dir($dir)) {
+    @mkdir($dir, 0755);
+    #code
+  }
+  $file = xnxf_geetest_Path("bin-css");
+  $css = $zbp->Config('xnxf_geetest')->css;
+  file_put_contents($file, $css);
+}
+
 function xnxf_geetest_Path($file, $t = "path")
 {
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=2021-03-02";
+    $hash = "?v=20230409155011";
   else
     $hash = "";
   switch ($file) {
@@ -97,6 +113,12 @@ function xnxf_geetest_Path($file, $t = "path")
       break;
     case "plu.js":
       return $result . "plugin.js{$hash}";
+      break;
+    case "bin":
+      return $result . "bin/";
+      break;
+    case "bin-css":
+      return $result . "bin/style.css";
       break;
     case "Main":
       return $result . "main.php";
