@@ -101,7 +101,7 @@ function xnxf_geetest_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=20230409155011";
+    $hash = "?v=20230409103";
   else
     $hash = "";
   switch ($file) {
@@ -118,7 +118,7 @@ function xnxf_geetest_Path($file, $t = "path")
       return $result . "bin/";
       break;
     case "bin-css":
-      return $result . "bin/style.css";
+      return $result . "bin/style.css{$hash}";
       break;
     case "Main":
       return $result . "main.php";
