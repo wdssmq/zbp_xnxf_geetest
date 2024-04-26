@@ -137,10 +137,11 @@ function xnxf_geetest_verify_base($code = "", $app = "capt", $exp = 300)
     return "ok";
   }
   $zbp->StartSession();
-  require __DIR__ . '/function.php';
+  require __DIR__ . '/lib/class.gt.php';
   $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
+  $param = xnxf_geetest_GetGtParam();
   if (isset($_SESSION['gtserver']) && $_SESSION['gtserver'] == 1) {
-    $result = $GtSdk->success_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate', "COOKIE"), GetVars('geetestseccode', "COOKIE"));
+    $result = $GtSdk->success_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate', "COOKIE"), GetVars('geetestseccode', "COOKIE"), $param);
   } else {
     $result = $GtSdk->fail_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate',  "COOKIE"), GetVars('geetestseccode', "COOKIE"));
   }
@@ -149,7 +150,21 @@ function xnxf_geetest_verify_base($code = "", $app = "capt", $exp = 300)
   } else {
     setcookie($cookieName, $code, time() - 1, $zbp->cookiespath);
   }
-  return $result;
+  if ($result === 1) {
+    return "ok";
+  } else {
+    return "验证失败";
+  }
+}
+
+function xnxf_geetest_GetGtParam()
+{
+  global $zbp;
+  return array(
+    'user_id' => $zbp->user->ID,
+    'client_type' => 'web',
+    'ip_address' => GetGuestIP(),
+  );
 }
 
 // 构建用于插入 CSS 和 JS 的 HTML 代码
@@ -185,10 +200,10 @@ function xnxf_geetest_Path($file, $t = "path")
       return $result . "tpl/capt.php";
       break;
     case "gt.js":
-      return $result . "gt.js{$hash}";
+      return $result . "script/gt.js{$hash}";
       break;
     case "plu.js":
-      return $result . "plugin.js{$hash}";
+      return $result . "script/plugin.js{$hash}";
       break;
     case "bin":
       return $result . "bin/";
