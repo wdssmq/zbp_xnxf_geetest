@@ -69,8 +69,17 @@ InstallPlugin_xnxf_geetest();
           </td>
         </tr>
         <tr>
-          <td><label for="email">邮箱必填</label></td>
-          <td><?php zbpform::zbradio("email", $zbp->Config("xnxf_geetest")->email); ?></td>
+          <td>更多选项</td>
+          <td>
+            <p>
+              <label for="email">邮箱必填</label>
+              <?php zbpform::zbradio("email", $zbp->Config("xnxf_geetest")->email); ?>
+            </p>
+            <p>
+              <label for="login">接管登录验证</label>
+              <?php zbpform::zbradio("login", $zbp->Config("xnxf_geetest")->login); ?>
+            </p>
+          </td>
           <td></td>
         </tr>
         <tr>

@@ -8,6 +8,60 @@ function ActivePlugin_xnxf_geetest()
   Add_Filter_Plugin('Filter_Plugin_ViewComments_Template', 'xnxf_geetest_putcode');
   Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'xnxf_geetest_verify');
   Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'xnxf_geetest_begin');
+  // 接口挂载 - 后台登录
+  Add_Filter_Plugin('Filter_Plugin_Login_Header', 'xnxf_geetest_Login');
+}
+
+// 接口函数 - 后台登录
+function xnxf_geetest_Login()
+{
+  global $zbp;
+  $login = $zbp->Config('xnxf_geetest')->login;
+  $optLogin = $zbp->option['ZC_LOGIN_VERIFY_ENABLE'];
+  // 判断系统是否开启了登录验证，同时需要插件开启了接管
+  if (!$login || !$optLogin) {
+    return;
+  }
+  // 接管生效后，将系统登录验证关闭
+  $zbp->option['ZC_LOGIN_VERIFY_ENABLE'] = false;
+  // 引入插件的 CSS 和 JS
+  $js = $css = "";
+  xnxf_geetest_BuildInsert($js, $css);
+  // 为登录页面添加验证组件
+  echo <<<HTML
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  const passwordElement = document.querySelector('dd.password');
+  const validcodeElement = document.createElement('dd');
+  validcodeElement.className = 'validcode';
+  validcodeElement.innerHTML = '<div id="xnxf-geetest"></div>';
+  passwordElement.parentNode.insertBefore(validcodeElement, passwordElement.nextSibling);
+  // 为 #btnPost 添加类名
+  const btnPost = document.getElementById('btnPost');
+  btnPost.classList.add('geetest-btn','verify');
+});
+</script>
+HTML;
+  echo $js;
+  // 验证成功后的回调
+  echo <<<HTML
+<script>
+gtplug.login = function() {
+  // 如果是由提交按钮触发的验证会有 done 标记，需要再次触发提交
+  if ($(".geetest-btn.verify.done").length === 0){
+    return;
+  }
+  const strUserName = $("#username").val().trim();
+  const strPassWord = $("#password").val().trim();
+  if (strUserName !== "" && strPassWord !== "") {
+    $("form").attr("action", "cmd.php?act=verify");
+    // 尝试触发表单提交
+    $("form").submit();
+  }
+}
+</script>
+HTML;
+  echo $css;
 }
 
 function xnxf_geetest_begin(&$templates)
@@ -30,17 +84,28 @@ function xnxf_geetest_putcode(&$template)
     return;
   }
   $template->SetTags('geetest', '<div id="xnxf-geetest"></div>');
-  $zbp->footer .= '<script src="' . xnxf_geetest_Path("gt.js", "host") . '"></script><!--gtplug--><script src="' . xnxf_geetest_Path("plu.js", "host") . '"></script>';
-  $style = xnxf_geetest_Path("bin-css", "host");
-  $zbp->header .= "<link rel=\"stylesheet\" href=\"{$style}\">";
+  $js = $css = "";
+  xnxf_geetest_BuildInsert($js, $css);
+  $zbp->footer .= $js;
+  $zbp->header .= $css;
 }
 
 function xnxf_geetest_verify()
 {
   global $zbp;
-  if (GetVars('act', 'GET') !== "cmt") {
+  $act = GetVars('act', 'GET');
+  if (!HasNameInString('cmt|verify', $act)) {
     return;
   }
+  // 如果是登录验证
+  if ($act == 'verify') {
+    $result = xnxf_geetest_verify_base();
+    if ($result === "ok") {
+      $zbp->option['ZC_LOGIN_VERIFY_ENABLE'] = false;
+    }
+    return;
+  }
+  // 评论验证
   if ($zbp->user->ID > 0 && $zbp->user->Level < 5) {
     return;
   }
@@ -51,7 +116,7 @@ function xnxf_geetest_verify()
       ScriptError("请输入邮箱");
   }
   $result = xnxf_geetest_verify_base();
-  if ($result == "ok") {
+  if ($result === "ok") {
     return;
   } else {
     if (GetVars('format', 'POST') == 'json')
@@ -87,6 +152,13 @@ function xnxf_geetest_verify_base($code = "", $app = "capt", $exp = 300)
   return $result;
 }
 
+// 构建用于插入 CSS 和 JS 的 HTML 代码
+function xnxf_geetest_BuildInsert(&$js, &$css)
+{
+  $js .= "<script src=\"" . xnxf_geetest_Path("gt.js", "host") . "\"></script>\n<!--gtplug-->\n<script defer src=\"" . xnxf_geetest_Path("plu.js", "host") . "\"></script>\n";
+  $css .= "<link rel=\"stylesheet\" href=\"" . xnxf_geetest_Path("bin-css", "host") . "\">\n";
+}
+
 function xnxf_geetest_BuildCSS()
 {
   global $zbp;
@@ -105,7 +177,7 @@ function xnxf_geetest_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=20230409103";
+    $hash = "?v=20240426160224";
   else
     $hash = "";
   switch ($file) {
