@@ -9,6 +9,7 @@ function ActivePlugin_xnxf_geetest()
   Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'xnxf_geetest_verify');
   Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'xnxf_geetest_begin');
 }
+
 function xnxf_geetest_begin(&$templates)
 {
   if (!isset($templates['comment-post'])) {
@@ -20,6 +21,7 @@ function xnxf_geetest_begin(&$templates)
   $templates['commentpost'] = $templates['comment-post'];
   $templates['plugin_xnxf_geetest_capt'] = file_get_contents(xnxf_geetest_Path("tpl-capt"));
 }
+
 function xnxf_geetest_putcode(&$template)
 {
   global $zbp;
@@ -32,6 +34,7 @@ function xnxf_geetest_putcode(&$template)
   $style = xnxf_geetest_Path("bin-css", "host");
   $zbp->header .= "<link rel=\"stylesheet\" href=\"{$style}\">";
 }
+
 function xnxf_geetest_verify()
 {
   global $zbp;
@@ -57,6 +60,7 @@ function xnxf_geetest_verify()
       ScriptError($result);
   }
 }
+
 function xnxf_geetest_verify_base($code = "", $app = "capt", $exp = 300)
 {
   global $zbp;
@@ -127,6 +131,7 @@ function xnxf_geetest_Path($file, $t = "path")
       return $result;
   }
 }
+
 function xnxf_geetest_ShowCapt($title = "", $note = "")
 {
   global $zbp;
@@ -145,6 +150,7 @@ function xnxf_geetest_ShowCapt($title = "", $note = "")
   $zbp->template->Display();
   die();
 }
+
 function InstallPlugin_xnxf_geetest()
 {
   global $zbp;
@@ -156,6 +162,7 @@ function InstallPlugin_xnxf_geetest()
   $zbp->SetHint('good', '请确认已在模板中加入{$geetest}');
   $zbp->BuildTemplate();
 }
+
 function UninstallPlugin_xnxf_geetest()
 {
   global $zbp;
