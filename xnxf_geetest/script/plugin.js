@@ -1,5 +1,5 @@
 /* global gtplug:false initGeetest:false */
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener("DOMContentLoaded", function() {
   const gob_pass = zbp.cookie.get("capt_GeetPass");
   let cur_pass = false;
   // console.log(gob_pass, $("#xnxf-geetest").length);
