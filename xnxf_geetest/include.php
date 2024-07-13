@@ -195,7 +195,7 @@ function xnxf_geetest_Path($file, $t = "path")
   global $zbp;
   $result = $zbp->$t . "zb_users/plugin/xnxf_geetest/";
   if ($t == "host")
-    $hash = "?v=20240426103";
+    $hash = "?v=20240713103";
   else
     $hash = "";
   switch ($file) {
