@@ -69,7 +69,10 @@ function xnxf_geetest_begin(&$templates)
   if (!isset($templates['comment-post'])) {
     $templates['comment-post'] = $templates['commentpost'];
   }
-  if (strpos($templates['comment-post'], "geetest") === false && mb_substr_count($templates['comment-post'], "ZC_COMMENT_VERIFY_ENABLE", "UTF-8") == 1) {
+  // 如果模板内有 <!--xnxf_geetest-->，替换
+  if (strpos($templates['comment-post'], "<!--xnxf_geetest-->") !== false) {
+    $templates['comment-post'] = str_replace('<!--xnxf_geetest-->', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}', $templates['comment-post']);
+  } elseif (strpos($templates['comment-post'], "geetest") === false && mb_substr_count($templates['comment-post'], "ZC_COMMENT_VERIFY_ENABLE", "UTF-8") == 1) {
     $templates['comment-post'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['comment-post']);
   }
   $templates['commentpost'] = $templates['comment-post'];
