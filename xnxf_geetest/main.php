@@ -29,6 +29,11 @@ if ($act == 'save') {
   }
   xnxf_geetest_BuildCSS();
   $zbp->SaveConfig('xnxf_geetest');
+
+  // 开启系统自带的验证
+  $zbp->option['ZC_COMMENT_VALIDCMTKEY_ENABLE'] = $zbp->Config('xnxf_geetest')->cmtKeyOn ? true : false;
+  $zbp->SaveOption();
+
   $zbp->BuildTemplate();
   $zbp->SetHint('good');
   Redirect('./main.php' . ($suc == null ? '' : "?act={$suc}"));
@@ -78,6 +83,11 @@ InstallPlugin_xnxf_geetest();
             <p>
               <label for="login">接管登录验证</label>
               <?php zbpform::zbradio("login", $zbp->Config("xnxf_geetest")->login); ?>
+            </p>
+            <p>
+              <label for="cmtKeyOn">验证 cmtKey</label>
+              <?php zbpform::zbradio("cmtKeyOn", $zbp->Config("xnxf_geetest")->cmtKeyOn); ?>
+              <?php echo $zbp->option['ZC_COMMENT_VALIDCMTKEY_ENABLE'] ? '已启用' : '未启用'; ?>
             </p>
           </td>
           <td></td>
