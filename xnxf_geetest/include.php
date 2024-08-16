@@ -1,15 +1,34 @@
 <?php
-//注册插件
 RegisterPlugin("xnxf_geetest", "ActivePlugin_xnxf_geetest");
+
 function ActivePlugin_xnxf_geetest()
 {
+  // 接口挂载 - 模板编译处理
+  Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'xnxf_geetest_tpl');
   Add_Filter_Plugin('Filter_Plugin_ViewPost_Template', 'xnxf_geetest_putcode');
   Add_Filter_Plugin('Filter_Plugin_ViewList_Template', 'xnxf_geetest_putcode');
   Add_Filter_Plugin('Filter_Plugin_ViewComments_Template', 'xnxf_geetest_putcode');
   Add_Filter_Plugin('Filter_Plugin_Cmd_Begin', 'xnxf_geetest_verify');
-  Add_Filter_Plugin('Filter_Plugin_Zbp_BuildTemplate', 'xnxf_geetest_begin');
   // 接口挂载 - 后台登录
   Add_Filter_Plugin('Filter_Plugin_Login_Header', 'xnxf_geetest_Login');
+}
+
+// 接口函数 - 模板编译处理
+function xnxf_geetest_tpl(&$templates)
+{
+  if (!isset($templates['comment-post'])) {
+    $templates['comment-post'] = $templates['commentpost'];
+  }
+  // 如果模板内有 <!--xnxf_geetest-->，替换
+  if (strpos($templates['comment-post'], "<!--xnxf_geetest-->") !== false) {
+    $templates['comment-post'] = str_replace('<!--xnxf_geetest-->', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}', $templates['comment-post']);
+  } elseif (strpos($templates['comment-post'], "geetest") === false && mb_substr_count($templates['comment-post'], "ZC_COMMENT_VERIFY_ENABLE", "UTF-8") == 1) {
+    $templates['comment-post'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['comment-post']);
+  }
+  if (isset($templates['commentpost'])){
+    $templates['commentpost'] = $templates['comment-post'];
+  }
+  $templates['plugin_xnxf_geetest_capt'] = file_get_contents(xnxf_geetest_Path("tpl-capt"));
 }
 
 // 接口函数 - 后台登录
@@ -62,21 +81,6 @@ gtplug.login = function() {
 </script>
 HTML;
   echo $css;
-}
-
-function xnxf_geetest_begin(&$templates)
-{
-  if (!isset($templates['comment-post'])) {
-    $templates['comment-post'] = $templates['commentpost'];
-  }
-  // 如果模板内有 <!--xnxf_geetest-->，替换
-  if (strpos($templates['comment-post'], "<!--xnxf_geetest-->") !== false) {
-    $templates['comment-post'] = str_replace('<!--xnxf_geetest-->', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}', $templates['comment-post']);
-  } elseif (strpos($templates['comment-post'], "geetest") === false && mb_substr_count($templates['comment-post'], "ZC_COMMENT_VERIFY_ENABLE", "UTF-8") == 1) {
-    $templates['comment-post'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['comment-post']);
-  }
-  $templates['commentpost'] = $templates['comment-post'];
-  $templates['plugin_xnxf_geetest_capt'] = file_get_contents(xnxf_geetest_Path("tpl-capt"));
 }
 
 function xnxf_geetest_putcode(&$template)
@@ -249,12 +253,12 @@ function InstallPlugin_xnxf_geetest()
     $zbp->Config('xnxf_geetest')->privatekey = '36fc3fe98530eea08dfc6ce76e3d24c4';
     $zbp->SaveConfig('xnxf_geetest');
   }
-  $zbp->SetHint('good', '请确认已在模板中加入{$geetest}');
+  $zbp->SetHint('good', '请确认已在模板中加入 {$geetest} 或 &lt;!--xnxf_geetest--&gt;');
   $zbp->BuildTemplate();
 }
 
 function UninstallPlugin_xnxf_geetest()
 {
   global $zbp;
-  $zbp->SetHint('bad', '请移除模板中的{$geetest}标签');
+  $zbp->SetHint('bad', '请移除模板中的 {$geetest} 标签');
 }

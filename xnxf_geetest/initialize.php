@@ -11,7 +11,7 @@ if ($action == "geetest") {
   $status = $GtSdk->pre_process($param, 1);
   $_SESSION['gtserver'] = $status;
   header('Content-type: application/json');
-  // header('Access-Control-Allow-Origin: *');
+  header("Access-Control-Allow-Origin: http://localhost:3000");
   ob_clean();
   echo $GtSdk->get_response_str();
 }
