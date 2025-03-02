@@ -16,7 +16,9 @@ RSS 订阅：[https://feed.wdssmq.com](https://feed.wdssmq.com "沉冰浮水博�
 
 评论时的简易人机验证，也可接管默认的后台登录验证；
 
-<span style="color: #FF0000;">注：可靠性及验证速度受极验服务器影响。。</span>
+<span style="color: #FF0000;">可靠性及验证速度受极验服务器影响。。</span>
+
+<span style="color: #FF0000;">此插件使用 3.0 旧接口；</span>
 
 ## 截图
 

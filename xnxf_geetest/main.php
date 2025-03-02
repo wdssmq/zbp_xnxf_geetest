@@ -98,11 +98,11 @@ InstallPlugin_xnxf_geetest();
         </tr>
       </table>
     </form>
-    <p>1、注册 <a rel="nofollow" style="text-decoration: underline; color: rgb(0, 112, 192);" href="http://geetest.com/" title="极验验证" target="_blank">http://geetest.com/</a> 获取验证 ID 和 Key 写入插件配置项；</p>
+    <p>1、注册 <a rel="nofollow" style="text-decoration: underline; color: rgb(0, 112, 192);" href="http://geetest.com/" title="极验验证" target="_blank">http://geetest.com/</a> 获取验证 ID 和 Key 写入插件配置项；<strong>注：当前使用接口为「行为验证 3.0」</strong></p>
     <p>2、插件会尝试自动添加验证代码（不会修改主题原始文件）；</p>
     <p>3、如果未出现验证或位置不恰当请在模板文件 template/commentpost.php 中加入代码：<b>{if $zbp->CheckPlugin('xnxf_geetest')}{$geetest}{/if}</b></p>
     <p>4、一般在 {if $option['ZC_COMMENT_VERIFY_ENABLE']}……{/if} <b>前边或后边</b></p>
-    <p>5、登陆用户权限等级为 5（评论者）、6（游客）时仍需要验证，，其他级别不显示验证组件；</p>
+    <p>5、登录用户权限等级为 5（评论者）、6（游客）时仍需要验证，，其他级别不显示验证组件；</p>
     <p>6、单独调用：
     <pre>if ($zbp->CheckPlugin('xnxf_geetest')) {
   $result = xnxf_geetest_verify_base();
