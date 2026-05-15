@@ -174,6 +174,17 @@ function xnxf_geetest_GetGtParam()
   );
 }
 
+// 获取接口版本，默认为 3.0
+function xnxf_geetest_GetVersion()
+{
+  global $zbp;
+  $version = trim((string) $zbp->Config('xnxf_geetest')->geetestVersion);
+  if ($version !== '4') {
+    return '3';
+  }
+  return '4';
+}
+
 // 构建用于插入 CSS 和 JS 的 HTML 代码
 function xnxf_geetest_BuildInsert(&$js, &$css)
 {
