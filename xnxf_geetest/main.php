@@ -12,7 +12,6 @@ if (!$zbp->CheckPlugin('xnxf_geetest')) {
   die();
 }
 
-
 $blogtitle = 'GeeTest';
 require $blogpath . 'zb_system/admin/admin_header.php';
 require $blogpath . 'zb_system/admin/admin_top.php';
@@ -55,6 +54,13 @@ InstallPlugin_xnxf_geetest();
           <th width="10%">配置项</th>
           <th>内容</th>
           <th width="25%">说明</th>
+        </tr>
+        <tr>
+          <td><label for="geetestVersion">接口版本</label></td>
+          <td>
+            <?php zbpform::select("geetestVersion", array("3" => "行为验证 3.0", "4" => "行为验证 4.0"), trim((string)$zbp->Config("xnxf_geetest")->geetestVersion) === '4' ? '4' : '3'); ?>
+          </td>
+          <td>可在 3.0 与 4.0 间切换</td>
         </tr>
         <tr>
           <td><label for="captchaid">极验 ID</label></td>
