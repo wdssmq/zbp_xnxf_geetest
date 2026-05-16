@@ -18,13 +18,13 @@ RSS 订阅：[https://feed.wdssmq.com](https://feed.wdssmq.com "沉冰浮水博�
 
 <span style="color: #FF0000;">可靠性及验证速度受极验服务器影响。。</span>
 
-<span style="color: #FF0000;">此插件使用 3.0 旧接口；</span>
-
 ## 截图
 
 ![001](<https://app.zblogcn.com/zb_users/upload/2015/10/201510131444723299595467.png>)
 
 ## 更新日志
+
+2026-05-16：区分 3.0 和 4.0 接口；
 
 2024-07-13：系统自带一个 cmtKey 验证，然而默认是关闭的，增加了一个选项可以打开它；
 

@@ -25,7 +25,7 @@ function xnxf_geetest_tpl(&$templates)
   } elseif (strpos($templates['comment-post'], "geetest") === false && mb_substr_count($templates['comment-post'], "ZC_COMMENT_VERIFY_ENABLE", "UTF-8") == 1) {
     $templates['comment-post'] = str_replace('{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', '{if $zbp->CheckPlugin(\'xnxf_geetest\')}{$geetest}{/if}' . "\n" . '{if $option[\'ZC_COMMENT_VERIFY_ENABLE\']}', $templates['comment-post']);
   }
-  if (isset($templates['commentpost'])){
+  if (isset($templates['commentpost'])) {
     $templates['commentpost'] = $templates['comment-post'];
   }
   $templates['plugin_xnxf_geetest_capt'] = file_get_contents(xnxf_geetest_Path("tpl-capt"));
@@ -144,14 +144,60 @@ function xnxf_geetest_verify_base($code = "", $app = "capt", $exp = 300)
     return "ok";
   }
   $zbp->StartSession();
-  require __DIR__ . '/lib/class.gt.php';
-  $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
-  $param = xnxf_geetest_GetGtParam();
-  if (isset($_SESSION['gtserver']) && $_SESSION['gtserver'] == 1) {
-    $result = $GtSdk->success_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate', "COOKIE"), GetVars('geetestseccode', "COOKIE"), $param);
+  $version = xnxf_geetest_GetVersion();
+  $result = 0;
+  if ($version === '4') {
+    require __DIR__ . '/lib/class.git4.php';
+    $GtSdk4 = new GeetestLib4($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
+    $data = array(
+      'captcha_output' => GetVars('captcha_output', 'POST'),
+      'gen_time' => GetVars('gen_time', 'POST'),
+      'lot_number' => GetVars('lot_number', 'POST'),
+      'pass_token' => GetVars('pass_token', 'POST'),
+    );
+    if (empty($data['lot_number'])) {
+      $data['lot_number'] = GetVars('geetest_lot_number', 'COOKIE');
+    }
+    if (empty($data['lot_number'])) {
+      $data['lot_number'] = GetVars('lot_number', 'COOKIE');
+    }
+    if (empty($data['captcha_output'])) {
+      $data['captcha_output'] = GetVars('geetest_captcha_output', 'COOKIE');
+    }
+    if (empty($data['captcha_output'])) {
+      $data['captcha_output'] = GetVars('captcha_output', 'COOKIE');
+    }
+    if (empty($data['pass_token'])) {
+      $data['pass_token'] = GetVars('geetest_pass_token', 'COOKIE');
+    }
+    if (empty($data['pass_token'])) {
+      $data['pass_token'] = GetVars('pass_token', 'COOKIE');
+    }
+    if (empty($data['gen_time'])) {
+      $data['gen_time'] = GetVars('geetest_gen_time', 'COOKIE');
+    }
+    if (empty($data['gen_time'])) {
+      $data['gen_time'] = GetVars('gen_time', 'COOKIE');
+    }
+    $verify = $GtSdk4->validate_from_array($data);
+    if (is_array($verify) && isset($verify['result']) && $verify['result'] === 'success') {
+      $result = 1;
+    }
   } else {
-    $result = $GtSdk->fail_validate(GetVars('geetestchallenge', "COOKIE"), GetVars('geetestvalidate',  "COOKIE"), GetVars('geetestseccode', "COOKIE"));
+    require __DIR__ . '/lib/class.gt3.php';
+    $GtSdk = new GeetestLib($zbp->Config('xnxf_geetest')->captchaid, $zbp->Config('xnxf_geetest')->privatekey);
+    $param = xnxf_geetest_GetGtParam();
+    $challenge = GetVars('geetest_challenge', 'COOKIE');
+    $validate = GetVars('geetest_validate', 'COOKIE');
+    $seccode = GetVars('geetest_seccode', 'COOKIE');
+    // 根据服务器状态使用不同的验证方法
+    if (isset($_SESSION['gtserver']) && $_SESSION['gtserver'] == 1) {
+      $result = $GtSdk->success_validate($challenge, $validate, $seccode, $param);
+    } else {
+      $result = $GtSdk->fail_validate($challenge, $validate,  $seccode);
+    }
   }
+  // 验证结果处理
   if ($result === "ok" && !empty($code)) {
     setcookie($cookieName, $code, time() + $exp, $zbp->cookiespath);
   } else {
@@ -188,7 +234,14 @@ function xnxf_geetest_GetVersion()
 // 构建用于插入 CSS 和 JS 的 HTML 代码
 function xnxf_geetest_BuildInsert(&$js, &$css)
 {
-  $js .= "<script src=\"" . xnxf_geetest_Path("gt.js", "host") . "\"></script>\n<!--gtplug-->\n<script defer src=\"" . xnxf_geetest_Path("plu.js", "host") . "\"></script>\n";
+  $version = xnxf_geetest_GetVersion();
+  if ($version == '4') {
+    $gtJsUrl = xnxf_geetest_Path("gt4.js", "host");
+  } else {
+    $gtJsUrl = xnxf_geetest_Path("gt3.js", "host");
+  }
+  $js .= "<script>window.xnxf_geetest_version = '{$version}'; </script>\n";
+  $js .= "<script src=\"" . $gtJsUrl . "\"></script>\n<!--gtplug-->\n<script defer src=\"" . xnxf_geetest_Path("plu.js", "host") . "\"></script>\n";
   $css .= "<link rel=\"stylesheet\" href=\"" . xnxf_geetest_Path("bin-css", "host") . "\">\n";
 }
 
@@ -217,8 +270,11 @@ function xnxf_geetest_Path($file, $t = "path")
     case "tpl-capt":
       return $result . "tpl/capt.php";
       break;
-    case "gt.js":
-      return $result . "script/gt.js{$hash}";
+    case "gt3.js":
+      return $result . "script/gt3.js{$hash}";
+      break;
+    case "gt4.js":
+      return $result . "script/gt4.js{$hash}";
       break;
     case "plu.js":
       return $result . "script/plugin.js{$hash}";
